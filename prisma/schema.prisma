@@ -1,0 +1,48 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Employee {
+  employee_id   String      @id
+  name          String
+  department    Department  @relation(fields: [department_id], references: [department_id])
+  department_id Int
+  section       Section?    @relation(fields: [section_id], references: [section_id])
+  section_id    Int?
+  post          Post?       @relation(fields: [post_id], references: [post_id])
+  post_id       Int?
+  job_type      Int?
+}
+
+// 部署
+model Department {
+  department_id   Int        @id
+  department_name String
+  employees       Employee[]
+}
+
+// 課
+model Section {
+  section_id   Int        @id
+  section_name String
+  employees    Employee[]
+}
+
+// 役職
+model Post {
+  post_id   Int        @id
+  post_name String
+  employees Employee[]
+}
